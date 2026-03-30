@@ -3,6 +3,9 @@ import plotly.express as px
 import plotly.graph_objects as go
 
 st.set_page_config(page_title="Smart Solar Micro Hub", layout="wide")
+# ---------- MOBILE DETECTION FLAG ----------
+if "is_mobile" not in st.session_state:
+    st.session_state.is_mobile = False
 st.markdown("<style>body { margin: 0; }</style>", unsafe_allow_html=True)
 st.markdown("""
 <style>
@@ -24,22 +27,16 @@ div[data-baseweb="select"] {
 }
 /* NAVBAR BOX */
 .navbar-container {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-
-    background: rgba(255,255,255,0.85);
-    backdrop-filter: blur(12px);
-
-    padding: 14px 30px;
+    background: rgba(255,255,255,0.9);
+    background: #ffffff;
+    padding: 10px 20px;
     border-bottom: 1px solid #e2e8f0;
 
     display: flex;
     align-items: center;
     justify-content: space-between;
 
-    z-index: 999;
+    z-index: 10;
 }
 .nav-btn {
     padding: 8px 16px;
@@ -77,12 +74,9 @@ button {
 
 /* REDUCE BUTTON SIZE */
 button {
-    padding: 8px 18px !important;
-    font-size: 14px !important;
-    white-space: nowrap !important;
-    border-radius: 8px !important;
-    border: 1px solid #e2e8f0 !important;
-    background: white !important;
+    padding: 6px 12px !important;
+    font-size: 13px !important;
+    min-width: auto !important;
 }
 
 button:hover {
@@ -177,21 +171,21 @@ html, body, [class*="css"] {
 
 .hero p {
     font-size: 16px;
-    opacity: 0.9;
+    opacity: 1;
+    color: #e2e8f0;
 }
 
 /* CARDS */
 .card {
-    background: rgba(255,255,255,0.85);
-    backdrop-filter: blur(8px);
+    background: #ffffff;
     padding: 20px;
     border-radius: 18px;
-    box-shadow: 0px 8px 25px rgba(0,0,0,0.08);
+    box-shadow: 0px 6px 20px rgba(0,0,0,0.08);
     text-align: center;
     margin-top: 12px;
     margin-bottom: 12px;
-    transition: all 0.3s ease;
-    border: 1px solid rgba(255,255,255,0.4);
+    border: 1px solid #e2e8f0;
+    transition: all 0.25s ease;
 }
 .component-card {
     background: #f8fafc;
@@ -291,18 +285,6 @@ input {
 </style>
 """, unsafe_allow_html=True)
 
-st.markdown("""
-<style>
-.stApp {
-    background: linear-gradient(
-        180deg,
-        #f8fafc 0%,
-        #eef2f7 50%,
-        #f1f5f9 100%
-    );
-}
-</style>
-""", unsafe_allow_html=True)
 
 
 
@@ -421,14 +403,14 @@ if "page" not in st.session_state:
 
 st.markdown('<div class="navbar-container">', unsafe_allow_html=True)
 
-col1, col2 = st.columns([6,4])
+col1, col2 = st.columns([5,5])
 
 with col1:
     st.markdown("### 🌞 Smart Solar Micro Hub")
 
 with col2:
     st.markdown('<div class="navbar-right">', unsafe_allow_html=True)
-    b1, b2, b3 = st.columns(3)
+    b1, b2, b3 = st.columns([1,1,1], gap="small")
 
     current = st.session_state.page
 
@@ -476,7 +458,16 @@ if st.session_state.page == "Home":
     st.markdown("<div style='margin-top:25px;'></div>", unsafe_allow_html=True)
    
     # ---------- FEATURES ----------
-    col1, col2, col3 = st.columns([1,1,1], gap="small")
+    import streamlit as st
+
+    is_mobile = st.session_state.get("is_mobile", False)
+
+    if is_mobile:
+      col1 = st.container()
+      col2 = st.container()
+      col3 = st.container()
+    else:
+      col1, col2, col3 = st.columns(3)
     
 
     with col1:
@@ -520,7 +511,13 @@ margin-bottom:20px;
 </div>
 """, unsafe_allow_html=True)
 
-    c1, c2, c3, c4 = st.columns(4)
+    if is_mobile:
+     c1 = st.container()
+     c2 = st.container()
+     c3 = st.container()
+     c4 = st.container()
+    else:
+     c1, c2, c3, c4 = st.columns(4)
 
     with c1:
      st.markdown("""
@@ -795,7 +792,7 @@ border:1px solid #e2e8f0;
     
     devices = device_data[category]
 
-    col1, col2 = st.columns(2)
+    
 
     i = 0
     
@@ -808,8 +805,10 @@ border:1px solid #e2e8f0;
     if search.lower() in d.lower()
     }
 
-    cols = st.columns(2)
-
+    if st.session_state.is_mobile:
+     cols = [st.container()]
+    else:
+     cols = st.columns(2)
     i = 0
     for device, power in filtered_devices.items():
 
