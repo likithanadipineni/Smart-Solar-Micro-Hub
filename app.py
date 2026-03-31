@@ -859,7 +859,10 @@ border:1px solid #e2e8f0;
     if st.session_state.is_mobile:
      cols = [st.container()]
     else:
-     cols = st.columns(2)
+     if st.session_state.is_mobile:
+       cols = [st.container()]   # 1 column
+     else:
+        cols = st.columns(2)      # 2 columns
     i = 0
     for device, power in filtered_devices.items():
 
