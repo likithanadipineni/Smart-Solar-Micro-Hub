@@ -13,15 +13,20 @@ st.markdown("""
 """, unsafe_allow_html=True)
 # ---------- MOBILE DETECTION FLAG ----------
 # 📱 Detect screen width
+# 📱 SAFE MOBILE DETECTION
 screen_width = streamlit_js_eval(
     js_expressions='window.innerWidth',
     key='screen_width'
 )
 
-if screen_width is None:
+# Initialize only once
+if "is_mobile" not in st.session_state:
     st.session_state.is_mobile = False
-else:
+
+# Update ONLY when valid value comes
+if isinstance(screen_width, (int, float)):
     st.session_state.is_mobile = screen_width < 768
+
 # AUTO DETECT SCREEN SIZE
 # Default (CSS will handle mobile)
 # until we implement JS detection
@@ -440,16 +445,22 @@ is_mobile = st.session_state.get("is_mobile", False)
 if is_mobile:
     st.markdown("### 🌞 Smart Solar Micro Hub")
 
-    menu = st.sidebar.radio(
-    "☰ Menu",
-    ["Home", "Calculate", "About"],
-    key="Menu"
-    )
 
+    # Sync sidebar with page (SAFE FIX)
     if "page" not in st.session_state:
-      st.session_state.page = menu
-    elif st.session_state.page != menu:
-      st.session_state.page = menu
+     st.session_state.page = "Home"
+
+    menu = st.sidebar.radio(
+     "☰ Menu",
+     ["Home", "Calculate", "About"],
+     index=["Home", "Calculate", "About"].index(st.session_state.page),
+     key="Menu"
+     )
+
+# Only update when user clicks sidebar
+    if menu != st.session_state.page:
+     st.session_state.page = menu
+     st.rerun()
 
 
 # 💻 DESKTOP VIEW → KEEP OLD NAVBAR
@@ -858,7 +869,7 @@ border:1px solid #e2e8f0;
     if search.lower() in d.lower()
     }
 
-    if st.session_state.is_mobile:
+    if st.session_state.get("is_mobile", False):
       cols = [st.container()]
     else:
       cols = st.columns(2)    # 2 columns
