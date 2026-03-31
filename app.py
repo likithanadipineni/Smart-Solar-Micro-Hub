@@ -445,12 +445,6 @@ is_mobile = st.session_state.get("is_mobile", False)
 if is_mobile:
     st.markdown("### 🌞 Smart Solar Micro Hub")
 
-
-    # Sync sidebar with page (SAFE FIX)
-   # Initialize once
-    if "Menu" not in st.session_state:
-      st.session_state.Menu = st.session_state.page
-
 # ALWAYS show sidebar
     menu = st.sidebar.radio(
     "☰ Menu",
@@ -461,9 +455,9 @@ if is_mobile:
 # Sync BOTH ways
     if menu != st.session_state.page:
      st.session_state.page = menu
+     st.rerun()
 
-    if st.session_state.Menu != st.session_state.page:
-     st.session_state.Menu = st.session_state.page
+    
 # 💻 DESKTOP VIEW → KEEP OLD NAVBAR
 else:
     st.markdown('<div class="navbar-container">', unsafe_allow_html=True)
@@ -687,7 +681,6 @@ margin-bottom:20px;
 
     if st.button("⚡ Go to Calculate Section →", use_container_width=True):
      st.session_state.page = "Calculate"
-     st.session_state.Menu = "Calculate"   # ⭐ ADD THIS LINE
      st.rerun()
      
       
