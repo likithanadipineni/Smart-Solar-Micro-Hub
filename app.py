@@ -16,7 +16,7 @@ if "is_mobile" not in st.session_state:
     st.session_state.is_mobile = False
 # AUTO DETECT SCREEN SIZE
 # Default (CSS will handle mobile)
-st.session_state.is_mobile = False
+# until we implement JS detection
 
 
 st.markdown("<style>body { margin: 0; }</style>", unsafe_allow_html=True)
@@ -417,8 +417,6 @@ section[data-testid="stMain"] {
 if "page" not in st.session_state:
     st.session_state.page = "Home"
 
-
-
 # ---------- TOP NAVBAR ----------
 
 # ---------- FIXED NAVBAR ----------
@@ -440,7 +438,10 @@ if is_mobile:
     key="Menu"
     )
 
-    st.session_state.page = menu
+    if "page" not in st.session_state:
+      st.session_state.page = menu
+    elif st.session_state.page != menu:
+      st.session_state.page = menu
 
 
 # 💻 DESKTOP VIEW → KEEP OLD NAVBAR
@@ -851,12 +852,9 @@ border:1px solid #e2e8f0;
     }
 
     if st.session_state.is_mobile:
-     cols = [st.container()]
+      cols = [st.container()]
     else:
-     if st.session_state.is_mobile:
-       cols = [st.container()]   # 1 column
-     else:
-        cols = st.columns(2)      # 2 columns
+      cols = st.columns(2)    # 2 columns
     i = 0
     for device, power in filtered_devices.items():
 
@@ -990,7 +988,11 @@ margin-bottom:10px;
      """, unsafe_allow_html=True)
 
       # 🔹 CLEAN SLIDER SECTION
-      col1, col2 = st.columns(2)
+      if st.session_state.is_mobile:
+        col1 = st.container()
+        col2 = st.container()
+      else:
+         col1, col2 = st.columns(2)
 
       with col1:
         qty = st.slider(
