@@ -863,7 +863,7 @@ border:1px solid #e2e8f0;
     i = 0
     for device, power in filtered_devices.items():
 
-     col = cols[i % 2]
+     col = cols[i % len(cols)]
 
      selected = device in st.session_state.devices
      card_bg = "#dcfce7" if selected else "#ffffff"
