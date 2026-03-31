@@ -1,7 +1,7 @@
 import streamlit as st
 import plotly.express as px
 import plotly.graph_objects as go
-from streamlit_js_eval import streamlit_js_eval
+
 
 st.set_page_config(page_title="Smart Solar Micro Hub", layout="wide")
 st.markdown("""
@@ -15,16 +15,8 @@ st.markdown("""
 if "is_mobile" not in st.session_state:
     st.session_state.is_mobile = False
 # AUTO DETECT SCREEN SIZE
-screen_width = streamlit_js_eval(
-    js_expressions='window.innerWidth',
-    key='screen_width'
-)
-
-if screen_width is not None:
-    if screen_width < 768:
-        st.session_state.is_mobile = True
-    else:
-        st.session_state.is_mobile = False
+# Default (CSS will handle mobile)
+st.session_state.is_mobile = False
 
 
 st.markdown("<style>body { margin: 0; }</style>", unsafe_allow_html=True)
@@ -443,8 +435,9 @@ if is_mobile:
     st.markdown("### 🌞 Smart Solar Micro Hub")
 
     menu = st.sidebar.radio(
-        "☰ Menu",
-        ["Home", "Calculate", "About"]
+    "☰ Menu",
+    ["Home", "Calculate", "About"],
+    key="Menu"
     )
 
     st.session_state.page = menu
@@ -672,8 +665,9 @@ margin-bottom:20px;
     
 
     if st.button("⚡ Go to Calculate Section →", use_container_width=True):
-     st.session_state.page = "Calculate"
-     st.rerun()
+      st.session_state.page = "Calculate"
+      st.session_state["Menu"] = "Calculate"   # 🔥 IMPORTANT
+      st.rerun()
      
       
 
