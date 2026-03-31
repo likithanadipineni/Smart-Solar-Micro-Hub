@@ -1,33 +1,38 @@
 import streamlit as st
 import plotly.express as px
 import plotly.graph_objects as go
+from streamlit_js_eval import streamlit_js_eval
 
 st.set_page_config(page_title="Smart Solar Micro Hub", layout="wide")
+st.markdown("""
+<style>
+:root {
+    color-scheme: light !important;
+}
+</style>
+""", unsafe_allow_html=True)
 # ---------- MOBILE DETECTION FLAG ----------
 if "is_mobile" not in st.session_state:
     st.session_state.is_mobile = False
+# AUTO DETECT SCREEN SIZE
+screen_width = streamlit_js_eval(
+    js_expressions='window.innerWidth',
+    key='screen_width'
+)
+
+if screen_width is not None:
+    if screen_width < 768:
+        st.session_state.is_mobile = True
+    else:
+        st.session_state.is_mobile = False
+
+
 st.markdown("<style>body { margin: 0; }</style>", unsafe_allow_html=True)
 st.markdown("""
 <style>
-.fade-in {
-    animation: fadeIn 0.6s ease-in;
-}
 
-@keyframes fadeIn {
-    from { opacity: 0; transform: translateY(10px); }
-    to { opacity: 1; transform: translateY(0); }
-}
-label {
-    margin-bottom: 8px !important;
-    display: block !important;
-}
-
-div[data-baseweb="select"] {
-    margin-top: 6px;
-}
 /* NAVBAR BOX */
 .navbar-container {
-    background: rgba(255,255,255,0.9);
     background: #ffffff;
     padding: 10px 20px;
     border-bottom: 1px solid #e2e8f0;
@@ -79,43 +84,12 @@ button {
     min-width: auto !important;
 }
 
-button:hover {
-    background: #f1f5f9 !important;
-}
-</style>
-""", unsafe_allow_html=True)
-st.markdown("""
-<style>
-
-/* MAIN NAVBAR BOX */
-
-
-/* ALIGN TITLE + BUTTONS CENTER */
-
-
-/* RIGHT SIDE BUTTON ALIGN */
-.navbar-right {
-    display: flex;
-    justify-content: flex-end;
-    gap: 10px;
-}
 
 </style>
 """, unsafe_allow_html=True)
 st.markdown("""
 <style>
 
-/* REMOVE ALL TOP SPACE */
-.block-container {
-    padding-top: 2rem !important;
-    padding-left: 2rem !important;
-    padding-right: 2rem !important;
-}
-
-/* REMOVE HEADER */
-header {
-    display: none !important;
-}
 
 /* REMOVE INTERNAL GAP */
 div[data-testid="stVerticalBlock"] {
@@ -136,13 +110,6 @@ div[data-testid="stVerticalBlock"] > div:first-child {
 
 
 
-st.markdown("""
-<style>
-.stApp {
-    background-color: #f8fafc;
-}
-</style>
-""", unsafe_allow_html=True)
 
 st.markdown("""
 <style>
@@ -150,8 +117,15 @@ st.markdown("""
 /* FONT */
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap');
 
-html, body, [class*="css"] {
+html, body {
     font-family: 'Poppins', sans-serif;
+}
+.stApp {
+    background-color: #f8fafc !important;
+}
+
+body {
+    background-color: #f8fafc;
 }
 
 /* HERO SECTION */
@@ -186,6 +160,7 @@ html, body, [class*="css"] {
     margin-bottom: 12px;
     border: 1px solid #e2e8f0;
     transition: all 0.25s ease;
+    color: #1e293b;
 }
 .component-card {
     background: #f8fafc;
@@ -267,125 +242,183 @@ div[data-testid="stTextInput"] input {
 
 </style>
 """, unsafe_allow_html=True)
-
-
-
 st.markdown("""
 <style>
+/* 📱 GLOBAL MOBILE SPACING FIX */
+@media (max-width: 768px) {
 
+    /* Main container padding */
+    .block-container {
+        padding: 1rem !important;
+    }
 
+    /* Reduce section spacing */
+    .card {
+        margin-top: 8px !important;
+        margin-bottom: 8px !important;
+        padding: 15px !important;
+    }
 
-/* Number input styling */
-input {
-    border-radius: 10px !important;
-    border: 1px solid #e2e8f0 !important;
-    padding: 6px;
+    /* Reduce step card spacing */
+    .step-card {
+        padding: 12px !important;
+    }
+
+    /* Fix headings spacing */
+    h1, h2, h3 {
+        margin-bottom: 8px !important;
+    }
+
+    /* Reduce gap between sections */
+    div[data-testid="stVerticalBlock"] {
+        gap: 0.5rem !important;
+    }
+
+}
+/* 📱 MOBILE HERO FIX */
+@media (max-width: 768px) {
+
+    .hero {
+        padding: 20px !important;
+        border-radius: 12px !important;
+    }
+
+    .hero h1 {
+        font-size: 22px !important;
+    }
+
+    .hero p {
+        font-size: 13px !important;
+    }
+
 }
 
-</style>
-""", unsafe_allow_html=True)
-
-
-
-
-st.markdown("""
-<style>
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap');
-
-html, body, [class*="css"] {
-    font-family: 'Poppins', sans-serif;
+/* 🌞 RESPONSIVE SOLAR SECTION */
+.solar-flex {
+    display: flex;
+    gap: 30px;
+    align-items: center;
 }
 
-h1 {
-    font-weight: 600;
-    color: #1e293b;
+/* 📱 MOBILE FIX */
+@media (max-width: 768px) {
+    .solar-flex {
+        flex-direction: column !important;
+        text-align: center;
+    }
 }
+/* 📱 MOBILE BUTTON FIX */
+@media (max-width: 768px) {
 
-h2, h3 {
-    color: #334155;
-}
+    button {
+        width: 100% !important;
+        padding: 12px !important;
+        font-size: 15px !important;
+        border-radius: 12px !important;
+    }
 
-.stMetric {
-    background-color: #f8fafc;
-    padding: 15px;
-    border-radius: 10px;
-    box-shadow: 0px 2px 8px rgba(0,0,0,0.05);
-}
-
- 
-
-
-.nav-item {
-    padding: 6px 14px;
-    border-radius: 8px;
-    cursor: pointer;
-    color: #64748b;
-}
-
-.nav-item.active {
-    background: #dcfce7;
-    color: #16a34a;
-    font-weight: 600;
-}
-
-/* HEADER IMAGE */
-.header-img {
-    border-radius: 14px;
-    width: 100%;
-    height: 200px;
-    object-fit: cover;
-    margin-bottom: 20px;
-}
-</style>
-""", unsafe_allow_html=True)
-
-
-st.markdown("""
-<style>
-div[data-testid="stNumberInput"] {
-    background: white;
-    padding: 10px;
-    border-radius: 12px;
-    border: 1px solid #e2e8f0;
-    box-shadow: 0px 2px 8px rgba(0,0,0,0.05);
 }
 </style>
 """, unsafe_allow_html=True)
 
-
-
 st.markdown("""
 <style>
 
-/* FULL SELECT BOX */
-div[data-baseweb="select"] > div {
-    min-height: 52px !important;
-    border-radius: 14px !important;
-    border: 1px solid #e2e8f0 !important;
-    background-color: white !important;
-    padding: 10px 14px !important;
-    box-shadow: 0px 2px 8px rgba(0,0,0,0.05);
+/* 🔥 FORCE SELECTBOX FULL WHITE */
+div[data-baseweb="select"] * {
+    background-color: #ffffff !important;
+    color: #0f172a !important;
 }
 
-/* THIS IS THE REAL FIX */
-div[data-baseweb="select"] div {
-    white-space: normal !important;
-    overflow: visible !important;
-    text-overflow: unset !important;
-    word-break: break-word !important;
-    line-height: 1.3 !important;
-}
-
-/* CLEAN WRAPPER */
+/* SELECT BOX MAIN */
 div[data-baseweb="select"] {
-    background: transparent !important;
+    background-color: #ffffff !important;
+    border: 1px solid #e2e8f0 !important;
+    border-radius: 10px !important;
+}
+
+/* DROPDOWN */
+ul[role="listbox"] * {
+    background-color: #ffffff !important;
+    color: #0f172a !important;
+}
+
+/* 🔥 NUMBER INPUT FULL FIX */
+div[data-testid="stNumberInput"] * {
+    background-color: #ffffff !important;
+    color: #0f172a !important;
+}
+
+/* 🔥 TEXT INPUT FULL FIX */
+div[data-testid="stTextInput"] * {
+    background-color: #ffffff !important;
+    color: #0f172a !important;
+}
+
+/* 🔥 INPUT FIELD BORDER */
+input {
+    background-color: #ffffff !important;
+    color: #0f172a !important;
     border: none !important;
-    padding: 0 !important;
+}
+
+/* 🔥 REMOVE DARK MODE ROOT */
+html, body, .stApp {
+    background-color: #f8fafc !important;
+    color: #0f172a !important;
 }
 
 </style>
 """, unsafe_allow_html=True)
+st.markdown("""
+<style>
 
+/* 🔥 FIX SELECTBOX (BLACK BAR ISSUE) */
+div[data-baseweb="select"] > div {
+    background-color: #ffffff !important;
+    color: #0f172a !important;
+    border: 1px solid #e2e8f0 !important;
+}
+
+/* DROPDOWN MENU */
+ul[role="listbox"] {
+    background-color: #ffffff !important;
+    color: #0f172a !important;
+}
+
+/* 🔥 FIX NUMBER INPUT */
+div[data-testid="stNumberInput"] input {
+    background-color: #ffffff !important;
+    color: #0f172a !important;
+}
+
+/* 🔥 FIX TEXT INPUT (SEARCH BAR) */
+div[data-testid="stTextInput"] input {
+    background-color: #ffffff !important;
+    color: #0f172a !important;
+}
+
+/* 🔥 FIX INPUT CONTAINER (IMPORTANT) */
+div[data-testid="stTextInput"],
+div[data-testid="stNumberInput"] {
+    background-color: #ffffff !important;
+    border: 1px solid #e2e8f0 !important;
+    border-radius: 10px !important;
+}
+
+/* 🔥 REMOVE DARK BACKGROUND FROM ALL INPUT WRAPPERS */
+div[data-baseweb="input"] {
+    background-color: #ffffff !important;
+}
+
+/* 🔥 FORCE LIGHT MODE */
+section[data-testid="stSidebar"],
+section[data-testid="stMain"] {
+    background-color: #f8fafc !important;
+}
+
+</style>
+""", unsafe_allow_html=True)
 
 
 # ---------- NAVIGATION STATE ----------
@@ -401,49 +434,67 @@ if "page" not in st.session_state:
 
 # ---------- CLEAN SINGLE NAVBAR ----------
 
-st.markdown('<div class="navbar-container">', unsafe_allow_html=True)
+# ---------- RESPONSIVE NAVBAR ----------
 
-col1, col2 = st.columns([5,5])
+is_mobile = st.session_state.get("is_mobile", False)
 
-with col1:
+# 📱 MOBILE VIEW → SIDEBAR MENU
+if is_mobile:
     st.markdown("### 🌞 Smart Solar Micro Hub")
 
-with col2:
-    st.markdown('<div class="navbar-right">', unsafe_allow_html=True)
-    b1, b2, b3 = st.columns([1,1,1], gap="small")
-
-    current = st.session_state.page
-
-    with b1:
-     if st.button("Home", key="home_btn"):
-        st.session_state.page = "Home"
-        st.rerun()
-     st.markdown(
-        f"<style>#home_btn button {{ {'background:#dcfce7; color:#16a34a; border:1px solid #bbf7d0;' if current=='Home' else ''} }}</style>",
-        unsafe_allow_html=True
+    menu = st.sidebar.radio(
+        "☰ Menu",
+        ["Home", "Calculate", "About"]
     )
 
-    with b2:
-     if st.button("Calculate", key="calc_btn"):
-        st.session_state.page = "Calculate"
-        st.rerun()
-     st.markdown(
-        f"<style>#calc_btn button {{ {'background:#dcfce7; color:#16a34a; border:1px solid #bbf7d0;' if current=='Calculate' else ''} }}</style>",
-        unsafe_allow_html=True
-    )
+    st.session_state.page = menu
 
-    with b3:
-     if st.button("About", key="about_btn"):
-        st.session_state.page = "About"
-        st.rerun()
-    st.markdown(
-        f"<style>#about_btn button {{ {'background:#dcfce7; color:#16a34a; border:1px solid #bbf7d0;' if current=='About' else ''} }}</style>",
-        unsafe_allow_html=True
-    )
+
+# 💻 DESKTOP VIEW → KEEP OLD NAVBAR
+else:
+    st.markdown('<div class="navbar-container">', unsafe_allow_html=True)
+
+    col1, col2 = st.columns([5,5])
+
+    with col1:
+        st.markdown("### 🌞 Smart Solar Micro Hub")
+
+    with col2:
+        st.markdown('<div class="navbar-right">', unsafe_allow_html=True)
+        b1, b2, b3 = st.columns([1,1,1], gap="small")
+
+        current = st.session_state.page
+
+        with b1:
+            if st.button("Home", key="home_btn"):
+                st.session_state.page = "Home"
+                st.rerun()
+            st.markdown(
+                f"<style>#home_btn button {{ {'background:#dcfce7; color:#16a34a; border:1px solid #bbf7d0;' if current=='Home' else ''} }}</style>",
+                unsafe_allow_html=True
+            )
+
+        with b2:
+            if st.button("Calculate", key="calc_btn"):
+                st.session_state.page = "Calculate"
+                st.rerun()
+            st.markdown(
+                f"<style>#calc_btn button {{ {'background:#dcfce7; color:#16a34a; border:1px solid #bbf7d0;' if current=='Calculate' else ''} }}</style>",
+                unsafe_allow_html=True
+            )
+
+        with b3:
+            if st.button("About", key="about_btn"):
+                st.session_state.page = "About"
+                st.rerun()
+            st.markdown(
+                f"<style>#about_btn button {{ {'background:#dcfce7; color:#16a34a; border:1px solid #bbf7d0;' if current=='About' else ''} }}</style>",
+                unsafe_allow_html=True
+            )
+
+        st.markdown('</div>', unsafe_allow_html=True)
 
     st.markdown('</div>', unsafe_allow_html=True)
-
-st.markdown('</div>', unsafe_allow_html=True)
     
 # ---------- HOME ----------
 if st.session_state.page == "Home":
@@ -574,7 +625,7 @@ margin-bottom:20px;
      margin-top: 20px;
      ">
 
-     <div style="display:flex; gap:30px; align-items:center;">
+     <div class="solar-flex">
 
      <!-- LEFT TEXT -->
      <div style="flex:1;">
@@ -907,11 +958,10 @@ margin-bottom:10px;
       # 🔥 GLASS CARD UI
       st.markdown(f"""
       <div style="
-      background: rgba(255,255,255,0.75);
-      backdrop-filter: blur(10px);
+      background: #ffffff;
       padding:20px;
       border-radius:18px;
-      border:1px solid rgba(255,255,255,0.4);
+      border:1px solid #e2e8f0;            
       margin-bottom:15px;
       box-shadow:0px 8px 25px rgba(0,0,0,0.08);
       ">
@@ -1219,7 +1269,7 @@ margin-bottom:10px;
 # ---------- ABOUT ----------
 elif st.session_state.page == "About":
     st.markdown("""
-         <div class="card fade-in">
+         <div class="card">
          <h1>🌞 About Solar Energy</h1>
          <p>Learn how solar power works and why it is the future of clean energy</p>
          </div>
@@ -1254,7 +1304,7 @@ box-shadow:0px 8px 25px rgba(0,0,0,0.15);
 
     with col1:
         st.markdown("""
-        <div class="card fade-in">
+        <div class="card">
             <img src="https://cdn-icons-png.flaticon.com/512/869/869869.png" width="50"/>
             <h4>Solar Panels</h4>
             <p>Capture sunlight and convert it into DC electricity.</p>
@@ -1263,7 +1313,7 @@ box-shadow:0px 8px 25px rgba(0,0,0,0.15);
 
     with col2:
         st.markdown("""
-        <div class="card fade-in">
+        <div class="card">
             <img src="https://cdn-icons-png.flaticon.com/512/2933/2933245.png" width="50"/>
             <h4>Inverter</h4>
             <p>Converts DC electricity into AC power.</p>
@@ -1272,7 +1322,7 @@ box-shadow:0px 8px 25px rgba(0,0,0,0.15);
 
     with col3:
         st.markdown("""
-        <div class="card fade-in">
+        <div class="card">
             <img src="https://cdn-icons-png.flaticon.com/512/1048/1048953.png" width="50"/>
             <h4>Battery</h4>
             <p>Stores energy for later use.</p>
@@ -1286,28 +1336,28 @@ box-shadow:0px 8px 25px rgba(0,0,0,0.15);
     st.markdown('<div class="section-title">⚙️ Key Components</div>', unsafe_allow_html=True)
 
     st.markdown("""
-<div class="component-card fade-in">
+<div class="component-card">
 <b>🔆 Solar Panels</b>
 <p>Convert sunlight into electricity. Typically rated at 300-450W per panel. Monocrystalline panels offer higher efficiency while polycrystalline are more cost-effective.</p>
 </div>
 """, unsafe_allow_html=True)
 
     st.markdown("""
-<div class="component-card fade-in">
+<div class="component-card">
 <b>🔌 Inverter</b>
 <p>Converts DC power from panels to AC power for home use. String inverters are common, while micro-inverters offer panel-level optimization.</p>
 </div>
 """, unsafe_allow_html=True)
 
     st.markdown("""
-<div class="component-card fade-in">
+<div class="component-card">
 <b>🔋 Battery Storage (Optional)</b>
 <p>Stores excess energy for use during night or power outages. Lithium-ion batteries are most common.</p>
 </div>
 """, unsafe_allow_html=True)
 
     st.markdown("""
-<div class="component-card fade-in">
+<div class="component-card">
 <b>🏠 Mounting Structure</b>
 <p>Secure framework to hold panels on rooftops. Must be sturdy and positioned for optimal sun exposure.</p>
 </div>
@@ -1323,7 +1373,7 @@ box-shadow:0px 8px 25px rgba(0,0,0,0.15);
 
     with col1:
      st.markdown("""
-     <div class="card fade-in">
+     <div class="card">
      <b>💰 Reduce Electricity Bills</b>
      <p>Save up to 90% on monthly electricity costs and protect yourself from rising energy prices</p>
 
@@ -1333,7 +1383,7 @@ box-shadow:0px 8px 25px rgba(0,0,0,0.15);
      """, unsafe_allow_html=True)
     with col2:
      st.markdown("""
-     <div class="card fade-in">
+     <div class="card">
      <b>⚡ Energy Independence</b>
      <p>Generate your own power and reduce dependence on unreliable grid electricity</p>
 
@@ -1385,8 +1435,7 @@ background: linear-gradient(135deg, #f0fdf4, #ecfeff);
 padding: 30px;
 border-radius: 18px;
 border: 1px solid #d1fae5;
-box-shadow: 0px 6px 20px rgba(0,0,0,0.05);
-" class="fade-in">
+box-shadow: 0px 6px 20px rgba(0,0,0,0.05);">
 
 <h3 style="margin-bottom:10px;"> Solar Energy in India</h3>
 
