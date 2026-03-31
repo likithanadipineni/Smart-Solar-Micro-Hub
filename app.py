@@ -451,16 +451,16 @@ if is_mobile:
      st.session_state.page = "Home"
 
     menu = st.sidebar.radio(
-     "☰ Menu",
-     ["Home", "Calculate", "About"],
-     
-     key="Menu"
-     )
+    "☰ Menu",
+    ["Home", "Calculate", "About"],
+    index=["Home","Calculate","About"].index(st.session_state.page),
+    key="Menu"
+)
 
-# Only update when user clicks sidebar
-    # ✅ SAFE SYNC (DO THIS)
-    st.session_state.page = menu
-
+# ✅ Only update if user changes sidebar
+    if menu != st.session_state.page:
+     st.session_state.page = menu
+     st.rerun()
 
 # 💻 DESKTOP VIEW → KEEP OLD NAVBAR
 else:
