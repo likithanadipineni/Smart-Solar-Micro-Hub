@@ -1,7 +1,7 @@
 import streamlit as st
 import plotly.express as px
 import plotly.graph_objects as go
-
+from streamlit_js_eval import streamlit_js_eval
 
 st.set_page_config(page_title="Smart Solar Micro Hub", layout="wide")
 st.markdown("""
@@ -12,8 +12,16 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 # ---------- MOBILE DETECTION FLAG ----------
-if "is_mobile" not in st.session_state:
+# 📱 Detect screen width
+screen_width = streamlit_js_eval(
+    js_expressions='window.innerWidth',
+    key='screen_width'
+)
+
+if screen_width is None:
     st.session_state.is_mobile = False
+else:
+    st.session_state.is_mobile = screen_width < 768
 # AUTO DETECT SCREEN SIZE
 # Default (CSS will handle mobile)
 # until we implement JS detection
