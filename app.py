@@ -458,9 +458,9 @@ if is_mobile:
 )
 
 # ✅ Only update if user changes sidebar
-    if menu != st.session_state.page:
-     st.session_state.page = menu
-     st.rerun()
+   # ✅ SAFE SYNC (NO OVERRIDE)
+    if "Menu" in st.session_state:
+      st.session_state.page = st.session_state.Menu
 
 # 💻 DESKTOP VIEW → KEEP OLD NAVBAR
 else:
