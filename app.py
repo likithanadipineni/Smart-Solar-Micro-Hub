@@ -674,8 +674,7 @@ margin-bottom:20px;
     
 
     if st.button("⚡ Go to Calculate Section →", use_container_width=True):
-      st.session_state.page = "Calculate"
-      st.session_state["Menu"] = "Calculate"   # 🔥 IMPORTANT
+      st.session_state.page = "Calculate"   # 🔥 IMPORTANT
       st.rerun()
      
       
